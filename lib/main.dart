@@ -1,3 +1,7 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:animated_widgets/widgets/opacity_animated.dart';
+import 'package:animated_widgets/widgets/rotation_animated.dart';
+import 'package:animated_widgets/widgets/shake_animated_widget.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -63,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -70,46 +75,81 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+        body: SafeArea(
+      child: Column(children: [
+        Container(
+            height: 30,
+            child: LinearProgressIndicator(
+              backgroundColor: Colors.purple,
+              valueColor:
+                  new AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
+              //minHeight: 30,
+              value: 0.5,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            color: Colors.green),
+        Expanded(
+            child: Container(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ShakeAnimatedWidget(
+                        enabled: true,
+                        duration: const Duration(milliseconds: 500),
+                        shakeAngle: Rotation.deg(z: 40),
+                        curve: Curves.linear,
+                        child: Container(
+                          color: Colors.white,
+                          child: Image.asset('assets/images/down.png'),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: OpacityAnimatedWidget.tween(
+                        opacityEnabled: 1, //define start value
+                        opacityDisabled: 0, //and end value
+                        enabled: true, //bind with the boolean
+                        child: Container(
+                          color: Colors.grey,
+                          child: Image.asset('assets/images/up.png'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                color: Colors.white)),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Container(
+              width: width,
+              padding: EdgeInsets.all(30),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: SingleChildScrollView(
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'xxx のこうげき！！\n9999のダメージ！！！\nyyyyはしっしんした！！！！\nわあああああああああああ！！！！！！！\n助けてええええええええええ',
+                      textStyle: const TextStyle(
+                        fontSize: 32.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      speed: const Duration(milliseconds: 100),
+                    ),
+                  ],
+                  totalRepeatCount: 4,
+                  pause: const Duration(milliseconds: 1000),
+                  displayFullTextOnTap: true,
+                  stopPauseOnTap: true,
+                ),
+              ),
             ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        //Expanded(child: Container(color: Colors.white))
+      ]),
+    ));
   }
 }
